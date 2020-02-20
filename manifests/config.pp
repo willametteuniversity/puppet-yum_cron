@@ -11,8 +11,6 @@ class yum_cron::config {
     if $::os['name'] == 'Fedora' {
       if $::os['release']['major'] >= '28' {
 
-        notify { 'Fedora block executing':}
-
         Dnf_automatic_config {
           notify => $yum_cron::config_notify,
         }
@@ -52,8 +50,6 @@ class yum_cron::config {
     # Handle all other Redhat.
     elsif $::os['family'] == 'RedHat' {
 
-      notify { 'RedHat block executing':}
-
       if $::os['release']['major'] == '8' {
         Dnf_automatic_config {
           notify => $yum_cron::config_notify,
@@ -90,8 +86,6 @@ class yum_cron::config {
         create_resources(yum_cron_hourly_config, $yum_cron::extra_hourly_configs)
       }
       elsif $::os['release']['major'] < '7' {
-
-        notify { 'Old RedHat block executing':}
 
         Shellvar {
           ensure => present,
