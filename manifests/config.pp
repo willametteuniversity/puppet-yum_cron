@@ -6,7 +6,7 @@ class yum_cron::config {
   }
 
   if $yum_cron::ensure == 'present' {
-    if $::operatingsystemmajrelease == '8' {
+    if $facts['os']['release']['major'] == '8' {
       Dnf_automatic_config {
         notify => $yum_cron::config_notify,
       }
@@ -24,7 +24,7 @@ class yum_cron::config {
       create_resources(dnf_automatic_config, $yum_cron::extra_configs)
     }
 
-    if $::operatingsystemmajrelease == '7' {
+    if $facts['os']['release']['major'] == '7' {
       Yum_cron_config {
         notify => $yum_cron::config_notify,
       }
@@ -43,7 +43,7 @@ class yum_cron::config {
       create_resources(yum_cron_hourly_config, $yum_cron::extra_hourly_configs)
     }
 
-    if $::operatingsystemmajrelease < '7' {
+    if $facts['os']['release']['major'] < '7' {
       Shellvar {
         ensure => present,
         target => $yum_cron::config_path,
@@ -60,7 +60,7 @@ class yum_cron::config {
         value    => $yum_cron::download_only,
       }
 
-      if $::operatingsystemmajrelease == '6' {
+      if $facts['os']['release']['major'] == '6' {
         shellvar { 'yum_cron DEBUG_LEVEL':
           variable => 'DEBUG_LEVEL',
           value    => $yum_cron::debug_level,
@@ -95,7 +95,7 @@ class yum_cron::config {
       }
     }
 
-    if $::operatingsystem =~ /Scientific/ and $yum_cron::yum_autoupdate_ensure == 'disabled' {
+    if $facts['os']['name'] =~ /Scientific/ and $yum_cron::yum_autoupdate_ensure == 'disabled' {
       file_line { 'disable yum-autoupdate':
         path  => '/etc/sysconfig/yum-autoupdate',
         line  => 'ENABLED=false',

@@ -2,15 +2,15 @@
 # @api private
 class yum_cron::params {
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       $service_hasstatus  = true
       $service_hasrestart = true
 
-      case $::operatingsystem {
+      case $facts['os']['name'] {
 
         'RedHat', 'CentOS': {
-          case $::operatingsystemmajrelease {
+          case $facts['os']['release']['major'] {
             '8': {
               $package_name     = 'dnf-automatic'
               $service_name     = 'dnf-automatic.timer'
@@ -33,13 +33,13 @@ class yum_cron::params {
               $randomwait       = '60'
             }
             default: {
-              fail("Unsupported ${::operatingsystem} operatingsystemmajrelease: ${::operatingsystemmajrelease}, module ${module_name} only supports RedHat 6,7, and 8.")
+              fail("Unsupported ${facts['os']['name']} operatingsystemmajrelease: ${facts['os']['release']['major']}, module ${module_name} only supports RedHat 6,7, and 8.")
             }
           }
         }
 
         'Fedora': {
-          case $::operatingsystemmajrelease {
+          case $facts['os']['release']['major'] {
             '30', '31', '32': {
               $package_name     = 'dnf-automatic'
               $service_name     = 'dnf-automatic.timer'
@@ -55,19 +55,19 @@ class yum_cron::params {
               $randomwait       = '360'
             }
             default: {
-              fail("Unsupported ${::operatingsystem} operatingsystemmajrelease: ${::operatingsystemmajrelease}, module ${module_name} only supports Fedora versions 22-32.")
+              fail("Unsupported ${facts['os']['name']} operatingsystemmajrelease: ${facts['os']['release']['major']}, module ${module_name} only supports Fedora versions 22-32.")
             }
           }
         }
 
         default: {
-          fail("Unsupported operatingsystem: ${::operatingsystem}, module ${module_name} only supports RedHat, CentOS, and Fedora.")
+          fail("Unsupported operatingsystem: ${facts['os']['name']}, module ${module_name} only supports RedHat, CentOS, and Fedora.")
         }
       }
     }
 
     default: {
-      fail("Unsupported osfamily: ${::osfamily}, module ${module_name} only support osfamily RedHat")
+      fail("Unsupported osfamily: ${facts['os']['family']}, module ${module_name} only support osfamily RedHat")
     }
   }
 

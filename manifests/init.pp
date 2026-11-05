@@ -93,7 +93,7 @@ class yum_cron (
   Pattern[/^(?:-)?[0-9]$/] $debug_level = $yum_cron::params::debug_level,
   Pattern[/^[0-9]+$/] $randomwait = $yum_cron::params::randomwait,
   String $mailto = 'root',
-  String $systemname = $::fqdn,
+  String $systemname = $facts['networking']['fqdn'],
   # EL6 only options
   Pattern[/^[0-6]+$/] $days_of_week = '0123456',
   Pattern[/^[0-6]$/] $cleanday = '0',
